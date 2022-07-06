@@ -21,15 +21,27 @@ public class JpaMain {
         //4. 변경 감지 : 엔티티 수정시 다시 em.persist(member)를 하지 않아도 jpa가 1차 캐시 내 엔티티와 스냅샷(초기 모습)을 비교하여
         //변경이 있을 경우 sql 저장소에 update query를 날린다.
         try{
-////            멤버 등록
-//            Member member = new Member();
-//            member.setId(2L);
-//            member.setName("HelloB");
-//            em.persist(member);
+            Member member1 = new Member();
+            member1.setUsername("Member1");
+//            member.setRoleType(RoleType.ADMIN);
 
-            Member findMember = em.find(Member.class, 1L);
-            findMember.setName("HelloJPA");
-//            em.persist(member)를 사용하지 않는다, beacause 변경 감지
+            Member member2 = new Member();
+            member2.setUsername("Member1");
+
+            Member member3 = new Member();
+            member3.setUsername("Member1");
+
+            System.out.println("===========");
+            em.persist(member1);
+            em.persist(member2);
+            em.persist(member3);
+
+            System.out.println("member1.getID() = " + member1.getId());
+            System.out.println("member2.getID() = " + member2.getId());
+            System.out.println("member3.getID() = " + member3.getId());
+            System.out.println("===========");
+
+//            db 수정 시em.persist(member)를 사용하지 않는다, beacause 변경 감지
 //            em.flush(); //영속성 컨텍스트의 변경 내용을 db에 동기화(컨텍스트를 비우는게 아님!) / transaction commit, jpql 실행 시 자동 flush됨
 //            em.clear(); //영속성 컨텍스트를 비워준다(테스트 시 사용)
             tx.commit(); //db에 반영

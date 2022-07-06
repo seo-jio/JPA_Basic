@@ -1,26 +1,41 @@
 package hellojpa;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 @Entity
-//@Table(name = "USER") //if db의 table name과 클래스 명이 다를 경우
-//일반적으로 DB의 Table 이름과 클래스 이름이 같을 경우 디폴트로 매핑된다.
+@SequenceGenerator(
+        name = "MEMBER_SEQ_GENERATOR",
+        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1, allocationSize = 50)
+
 public class Member {
-//    @Column(name = "username") //if db의 column name과 객체의 필드명이 다를 경우
-    private String name;
     @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY) MySql에서 주로 사용
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, //Oracle에서 주로 사용
+            generator = "MEMBER_SEQ_GENERATOR")
     private Long id;
 
-    public String getName() {
-        return name;
-    }
+    @Column(name = "name", nullable = false)
+    private String username;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private Integer age;
+
+    @Enumerated(EnumType.STRING)//무조건 EnumType.STRING 사용!
+    private RoleType roleType;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastModifiedDate;
+
+    //이전에는 위에 보이는 @Temporal을 사용하였지만 현재는 LocalDateTime을 사용
+    private LocalDate testLocalDate;
+    private LocalDateTime testLocalDateTime;
+
+    @Lob //문자는 Clob, 나머지는 Blob
+    private String description;
 
     public Long getId() {
         return id;
@@ -28,5 +43,69 @@ public class Member {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public LocalDate getTestLocalDate() {
+        return testLocalDate;
+    }
+
+    public void setTestLocalDate(LocalDate testLocalDate) {
+        this.testLocalDate = testLocalDate;
+    }
+
+    public LocalDateTime getTestLocalDateTime() {
+        return testLocalDateTime;
+    }
+
+    public void setTestLocalDateTime(LocalDateTime testLocalDateTime) {
+        this.testLocalDateTime = testLocalDateTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

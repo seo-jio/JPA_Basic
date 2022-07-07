@@ -17,6 +17,20 @@ public class Member {
             generator = "MEMBER_SEQ_GENERATOR")
     private Long id;
 
+
+    //DB 설계 시 단방향으로 먼저 해놓고 필요시 양방향으로 변환한다
+    @ManyToOne  // 연관관계의 주인은 외래 키의 위치를 기준으로 정한다! (외래키가 있으면 주인)
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     @Column(name = "name", nullable = false)
     private String username;
 

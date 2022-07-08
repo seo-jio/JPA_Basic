@@ -44,26 +44,41 @@ public class JpaMain {
 //            em.flush(); //영속성 컨텍스트의 변경 내용을 db에 동기화(컨텍스트를 비우는게 아님!) / transaction commit, jpql 실행 시 자동 flush됨
 //            em.clear(); //영속성 컨텍스트를 비워준다(테스트 시 사용)
 
-            Team teamA = new Team();
-            teamA.setName("TeamA");
-            em.persist(teamA);
-
-            Member member1 = new Member();
-            member1.setUsername("mem1");
-            em.persist(member1);
-
-            teamA.addMember(member1); //연관관계 편의 메소드(한쪽에만 생성)
+//            Team teamA = new Team();
+//            teamA.setName("TeamA");
+//            em.persist(teamA);
+//
+//            Member member1 = new Member();
+//            member1.setUsername("mem1");
+//            em.persist(member1);
+//
+//            teamA.addMember(member1); //연관관계 편의 메소드(한쪽에만 생성)
 //            em.flush();
 //            em.clear();
+//
+//            Team findTeam = em.find(Team.class, teamA.getId());
+//            List<Member> members = findTeam.getMembers();
+//
+//            System.out.println("================");
+//            for (Member member : members) {
+//                System.out.println("member.getUsername() = " + member.getUsername());
+//            }
+//            System.out.println("================");
 
-            Team findTeam = em.find(Team.class, teamA.getId());
-            List<Member> members = findTeam.getMembers();
+            Movie movie = new Movie();
+            movie.setActor("aaaa");
+            movie.setDirector("bbbb");
+            movie.setName("바람과 함께 사라지다");
+            movie.setPrice(10000);
+            em.persist(movie);
 
-            System.out.println("================");
-            for (Member member : members) {
-                System.out.println("member.getUsername() = " + member.getUsername());
-            }
-            System.out.println("================");
+            em.flush();
+            em.clear();
+
+            Movie findMovie = em.find(Movie.class, movie.getId());
+            System.out.println("findMovie.getName() = " + findMovie.getName());
+
+
 
             tx.commit(); //db에 반영
         }catch (Exception e){

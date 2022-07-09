@@ -1,6 +1,7 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -44,6 +45,7 @@ public class JpaMain {
 //            em.flush(); //영속성 컨텍스트의 변경 내용을 db에 동기화(컨텍스트를 비우는게 아님!) / transaction commit, jpql 실행 시 자동 flush됨
 //            em.clear(); //영속성 컨텍스트를 비워준다(테스트 시 사용)
 
+              //연관관계 매핑 예제
 //            Team teamA = new Team();
 //            teamA.setName("TeamA");
 //            em.persist(teamA);
@@ -65,18 +67,25 @@ public class JpaMain {
 //            }
 //            System.out.println("================");
 
-            Movie movie = new Movie();
-            movie.setActor("aaaa");
-            movie.setDirector("bbbb");
-            movie.setName("바람과 함께 사라지다");
-            movie.setPrice(10000);
-            em.persist(movie);
+            //상속관계 매핑 예제
+//            Movie movie = new Movie();
+//            movie.setActor("aaaa");
+//            movie.setDirector("bbbb");
+//            movie.setName("바람과 함께 사라지다");
+//            movie.setPrice(10000);
+//            em.persist(movie);
 
+            //MappedSuperclass 예제
+            Member member = new Member();
+            member.setUsername("userA");
+            member.setCreatedBy("seojio");
+            member.setCreatedDate(LocalDateTime.now());
+            em.persist(member);
             em.flush();
             em.clear();
 
-            Movie findMovie = em.find(Movie.class, movie.getId());
-            System.out.println("findMovie.getName() = " + findMovie.getName());
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+//            System.out.println("findMovie.getName() = " + findMovie.getName());
 
 
 

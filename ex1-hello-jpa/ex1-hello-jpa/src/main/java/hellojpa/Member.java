@@ -10,7 +10,7 @@ import java.util.Date;
         sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
         initialValue = 1, allocationSize = 50)
 
-public class Member {
+public class Member extends BaseEntity{
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY) MySql에서 주로 사용
     @GeneratedValue(strategy = GenerationType.SEQUENCE, //Oracle에서 주로 사용
@@ -39,14 +39,14 @@ public class Member {
     @Enumerated(EnumType.STRING)//무조건 EnumType.STRING 사용!
     private RoleType roleType;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModifiedDate;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date createdDate;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date lastModifiedDate;
 
     //이전에는 위에 보이는 @Temporal을 사용하였지만 현재는 LocalDateTime을 사용
-    private LocalDate testLocalDate;
-    private LocalDateTime testLocalDateTime;
+//    private LocalDate testLocalDate;
+//    private LocalDateTime testLocalDateTime;
 
     @Lob //문자는 Clob, 나머지는 Blob
     private String description;
@@ -81,38 +81,6 @@ public class Member {
 
     public void setRoleType(RoleType roleType) {
         this.roleType = roleType;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public LocalDate getTestLocalDate() {
-        return testLocalDate;
-    }
-
-    public void setTestLocalDate(LocalDate testLocalDate) {
-        this.testLocalDate = testLocalDate;
-    }
-
-    public LocalDateTime getTestLocalDateTime() {
-        return testLocalDateTime;
-    }
-
-    public void setTestLocalDateTime(LocalDateTime testLocalDateTime) {
-        this.testLocalDateTime = testLocalDateTime;
     }
 
     public String getDescription() {

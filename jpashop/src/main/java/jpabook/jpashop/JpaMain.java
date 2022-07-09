@@ -1,5 +1,6 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Book;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderItem;
@@ -19,21 +20,28 @@ public class JpaMain {
 
 
         try{
-            Member memberA = new Member();
-            memberA.setName("memA");
-            em.persist(memberA);
+            //연관관계 매핑 예제
+//            Member memberA = new Member();
+//            memberA.setName("memA");
+//            em.persist(memberA);
+//
+//            Order order = new Order();
+//            order.setMember(memberA);
+//
+//            order.addOrderItem(new OrderItem());
+//            em.persist(order);
+//
+//            System.out.println("=========");
+//            for (OrderItem orderItem : order.getOrderItems()) {
+//                System.out.println(orderItem);
+//            }
+//            System.out.println("=========");
 
-            Order order = new Order();
-            order.setMember(memberA);
-
-            order.addOrderItem(new OrderItem());
-            em.persist(order);
-
-            System.out.println("=========");
-            for (OrderItem orderItem : order.getOrderItems()) {
-                System.out.println(orderItem);
-            }
-            System.out.println("=========");
+            //상속관계 매핑 예제
+            Book book = new Book();
+            book.setAuthor("seojio");
+            book.setIsbn(1234);
+            em.persist(book);
 
             tx.commit();
         }catch(Exception e){

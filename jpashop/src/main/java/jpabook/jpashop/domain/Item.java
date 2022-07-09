@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Item {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)  //싱글 테이블 전략으로 상속관계 매핑
+@DiscriminatorColumn //single table일 경우 자동 생성
+public abstract class Item extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "ITEM_ID")
     private Long id;

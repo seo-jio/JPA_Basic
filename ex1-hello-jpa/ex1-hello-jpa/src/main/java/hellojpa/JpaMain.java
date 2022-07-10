@@ -74,26 +74,60 @@ public class JpaMain {
 //            movie.setName("바람과 함께 사라지다");
 //            movie.setPrice(10000);
 //            em.persist(movie);
-
-            //MappedSuperclass 예제
-            Member member = new Member();
-            member.setUsername("userA");
-            member.setCreatedBy("seojio");
-            member.setCreatedDate(LocalDateTime.now());
-            em.persist(member);
-            em.flush();
-            em.clear();
-
 //            Movie findMovie = em.find(Movie.class, movie.getId());
 //            System.out.println("findMovie.getName() = " + findMovie.getName());
 
+            //MappedSuperclass 예제
+//            Member member = new Member();
+//            member.setUsername("userA");
+//            member.setCreatedBy("seojio");
+//            member.setCreatedDate(LocalDateTime.now());
+//            em.persist(member);
+//            em.flush();
+//            em.clear();
+            
+            //Proxy 예제
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
+            Member m1 = new Member();
+            m1.setUsername("seojio");
+            em.persist(m1);
+
+            m1.setTeam(team);git 
+
+            //영속성 컨텍스트 안에 있는 엔티티는 프록시를 부르지 않고 엔티티를 바로 부른다.
+            em.flush();
+            em.clear();
+
+            Member m = em.find(Member.class, m1.getId());
+
+            System.out.println("m = " +  m.getTeam().getClass());
+
+
+//            Member refMember = em.getReference(Member.class, m1.getId());
+//            System.out.println("findMember.getClass() = " + refMember.getClass());
+            //jpa가 실제 값이 필요한 경우에 db에 query를 날린다.
+//            System.out.println("findMember.getUsername() = " + refMember.getUsername());
+
+            //영속성 컨텍스트에서 detach, 혹은 영속성 컨텍스트를 clear 해버리면 더 이상 영속성 엔티티가 프록시를 관리하지 않아 오류 발생
+//            em.detach(refMember);
+//            em.close();
+//
+//            System.out.println(refMember.getUsername());
+
+            //초기화 여부 확인 메소드
+//            refMember.getUsername();
+//            System.out.println(emf.getPersistenceUnitUtil().isLoaded(refMember));
 
             tx.commit(); //db에 반영
         }catch (Exception e){
             tx.rollback();  //이전 트랜젝션으로 롤백
+            e.printStackTrace();
         }finally {
             em.close();
+
         }
 
         emf.close();

@@ -19,7 +19,7 @@ public class Member extends BaseEntity{
 
 
     //DB 설계 시 단방향으로 먼저 해놓고 필요시 양방향으로 변환한다
-    @ManyToOne  // 연관관계의 주인은 외래 키의 위치를 기준으로 정한다! (외래키가 있으면 주인)
+    @ManyToOne(fetch = FetchType.LAZY)  // 연관관계의 주인은 외래 키의 위치를 기준으로 정한다! (외래키가 있으면 주인)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 

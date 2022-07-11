@@ -87,24 +87,27 @@ public class JpaMain {
 //            em.clear();
             
             //Proxy 예제
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
+//            Team team = new Team();
+//            team.setName("TeamA");
+//            em.persist(team);
+//
+//            Member m1 = new Member();
+//            m1.setUsername("seojio");
+//            em.persist(m1);
+//
+//            m1.setTeam(team);
+//
+//            //영속성 컨텍스트 안에 있는 엔티티는 프록시를 부르지 않고 엔티티를 바로 부른다.
+//            em.flush();
+//            em.clear();
+//
+//            Member m = em.find(Member.class, m1.getId());
+            //지연 로딩(실무에서는 무조건 지연 로딩으로 사용!!)
+//            List<Member> members = em.createQuery("select m from Member m", Member.class).getResultList();
 
-            Member m1 = new Member();
-            m1.setUsername("seojio");
-            em.persist(m1);
-
-            m1.setTeam(team);git 
-
-            //영속성 컨텍스트 안에 있는 엔티티는 프록시를 부르지 않고 엔티티를 바로 부른다.
-            em.flush();
-            em.clear();
-
-            Member m = em.find(Member.class, m1.getId());
-
-            System.out.println("m = " +  m.getTeam().getClass());
-
+            //즉시 로딩(jpql의 fetch, join으로 사용)
+//            List<Member> members = em.createQuery("select m from Member m join fetch m.team", Member.class).getResultList();
+//            System.out.println("m = " +  m.getTeam().getClass());
 
 //            Member refMember = em.getReference(Member.class, m1.getId());
 //            System.out.println("findMember.getClass() = " + refMember.getClass());
@@ -120,6 +123,20 @@ public class JpaMain {
             //초기화 여부 확인 메소드
 //            refMember.getUsername();
 //            System.out.println(emf.getPersistenceUnitUtil().isLoaded(refMember));
+
+            //영속성 전이와 고아 객체 예제
+            Child child1 = new Child();
+            Child child2 = new Child();
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+            em.persist(parent);
+
+            em.flush();
+            em.clear();
+
+            Parent findParent = em.find(Parent.class, parent.getId());
+            findParent.getChildList().remove(0);
 
             tx.commit(); //db에 반영
         }catch (Exception e){

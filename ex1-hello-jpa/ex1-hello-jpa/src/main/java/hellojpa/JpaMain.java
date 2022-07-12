@@ -125,18 +125,42 @@ public class JpaMain {
 //            System.out.println(emf.getPersistenceUnitUtil().isLoaded(refMember));
 
             //영속성 전이와 고아 객체 예제
-            Child child1 = new Child();
-            Child child2 = new Child();
-            Parent parent = new Parent();
-            parent.addChild(child1);
-            parent.addChild(child2);
-            em.persist(parent);
+//            Child child1 = new Child();
+//            Child child2 = new Child();
+//            Parent parent = new Parent();
+//            parent.addChild(child1);
+//            parent.addChild(child2);
+//            em.persist(parent);
+//
+//            em.flush();
+//            em.clear();
+//
+//            Parent findParent = em.find(Parent.class, parent.getId());
+//            findParent.getChildList().remove(0);
 
-            em.flush();
-            em.clear();
+            //값 타입 예제
+            Member member = new Member();
+            member.setUsername("seojio");
+//            Address homeAddress = new Address("seoul", "언주로", "1000");
+//            member.setHomeAddress(homeAddress);
+//            member.setWorkPeriod(new Period());
 
-            Parent findParent = em.find(Parent.class, parent.getId());
-            findParent.getChildList().remove(0);
+            member.getAddressHistory().add(new AddressEntity("city1", "street1", "1000"));
+            member.getAddressHistory().add(new AddressEntity("city2", "street2", "2000"));
+
+            em.persist(member);
+            //값 타입 변경 시 새로운 객체를 생성해서 넣어줘야 한다.
+//            Address newAddress = new Address("Yongin", homeAddress.getStreet(), homeAddress.getZipcode());
+
+            //값 타입 컬렉션
+//            member.getAddressHistory().add(new Address("city1", "street1", "1000"));
+//            member.getAddressHistory().add(new Address("city2", "street2", "2000"));
+//
+//            //equals()를 재정의해야 삭제가 가능하다
+//            member.getAddressHistory().remove(new Address("city1", "street1", "1000"));
+//            member.getAddressHistory().add(new Address("city3", "street3", "3000"));
+
+
 
             tx.commit(); //db에 반영
         }catch (Exception e){

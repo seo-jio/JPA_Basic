@@ -3,7 +3,10 @@ package hellojpa;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 @Entity
 @SequenceGenerator(
         name = "MEMBER_SEQ_GENERATOR",
@@ -35,10 +38,58 @@ public class Member extends BaseEntity{
     @Column(name = "name", nullable = false)
     private String username;
 
-    private Integer age;
+//    @Embedded
+//    private Period workPeriod;
+//
+//    @Embedded
+//    private Address homeAddress;
 
-    @Enumerated(EnumType.STRING)//무조건 EnumType.STRING 사용!
-    private RoleType roleType;
+    //값 타입 컬렉션
+    //지연로딩 전략을 사용하고 영속성전이, 고아객체 기능을 필수로 가짐
+//    @ElementCollection
+//    @CollectionTable(name = "ADDRESS", joinColumns = @JoinColumn(name = "MEMBER_ID"))
+//    private List<Address> addressHistory = new ArrayList<>();
+
+    //실무에서는 값 타입 컬렉션이 아닌 엔티티를 사용해 일대다 관계로 풀어낸다.
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "MEMBER_ID")
+    private List<AddressEntity> addressHistory = new ArrayList<>();
+
+    //    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "city", column = @Column("WORK_CITY")),
+//            @AttributeOverride(name = "street", column = @Column("WORK_STREET")),
+//            @AttributeOverride(name = "zipcode", column = @Column("WORK_ZIPCODE"))
+//    })
+//    private Address workAddress;
+
+
+    public List<AddressEntity> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<AddressEntity> addressHistory) {
+        this.addressHistory = addressHistory;
+    }
+
+//    public Period getWorkPeriod() {
+//        return workPeriod;
+//    }
+//
+//    public void setWorkPeriod(Period workPeriod) {
+//        this.workPeriod = workPeriod;
+//    }
+//
+//    public Address getHomeAddress() {
+//        return homeAddress;
+//    }
+//
+//    public void setHomeAddress(Address homeAddress) {
+//        this.homeAddress = homeAddress;
+//    }
+
+    //    @Enumerated(EnumType.STRING)//무조건 EnumType.STRING 사용!
+//    private RoleType roleType;
 
 //    @Temporal(TemporalType.TIMESTAMP)
 //    private Date createdDate;
@@ -49,8 +100,6 @@ public class Member extends BaseEntity{
 //    private LocalDate testLocalDate;
 //    private LocalDateTime testLocalDateTime;
 
-    @Lob //문자는 Clob, 나머지는 Blob
-    private String description;
 
     public Long getId() {
         return id;
@@ -68,27 +117,5 @@ public class Member extends BaseEntity{
         this.username = username;
     }
 
-    public Integer getAge() {
-        return age;
-    }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public RoleType getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

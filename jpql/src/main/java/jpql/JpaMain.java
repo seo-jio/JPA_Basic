@@ -1,9 +1,7 @@
 package jpql;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 public class JpaMain {
@@ -18,12 +16,30 @@ public class JpaMain {
             teamA.setName("TEAM_A");
             em.persist(teamA);
 
-            Member member = new Member();
-            member.setUsername("member");
-            member.setAge(10);
-            member.setTeam(teamA);
-            member.setUserType(MemberType.ADMIN);
-            em.persist(member);
+            Team teamB = new Team();
+            teamB.setName("TEAM_B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUsername("member1");
+            member1.setAge(10);
+            member1.setTeam(teamA);
+            member1.setUserType(MemberType.ADMIN);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            member2.setAge(20);
+            member2.setTeam(teamA);
+            member2.setUserType(MemberType.ADMIN);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("member3");
+            member3.setAge(30);
+            member3.setTeam(teamB);
+            member3.setUserType(MemberType.ADMIN);
+            em.persist(member3);
 
             em.flush();
             em.clear();
@@ -92,13 +108,53 @@ public class JpaMain {
 //            List<Integer> result = em.createQuery(query, Integer.class)
 //                    .getResultList();
 //
-//          
+//
 //          for (Integer integer : result) {
 //                System.out.println("integer = " + integer);
 //            }
 
+            //경로 표현식
+//            String query = "select m.team from Member m"; //단일 값 연관경로(묵시적 조인 발생)
+//            String query = "select t.members from Team t"; //컬렉션 값 연관경로(묵시적 조인 발생)
+//            String query = "select m.username from Team t join t.members m"; //컬렉션은 탐색이 안되서 명시적 조인과 별칭 사용
+//            List<String> result = em.createQuery(query, String.class)
+//                            .getResultList();
+//
+//            for (String s : result) {
+//                System.out.println("s = " + s);
+//            }
 
-            
+            //패치 조인
+            //일반 조인은 select 절에 있는 엔티티만 조회, 패치 조인은 연관된 엔티티도 함께 조회(즉시 로딩)
+            //패치 조인은 객체 그래프를 sql 한번에 조회하는 개념
+            //일반 조인에서 발생하는 n+1 문제를 해결 가능하다.
+            //별칭 사용 X
+            //실무에서 글로벌 로딩 전략을 모두 지연로딩으로 지정한 후 최적화가 필요한 곳에서만 패치 조인을 사용하여 성능을 관리한다.
+            //여러 테이블을 조회하여 엔티티가 가진 모양이 아닌 새로운 모양을 필요로 한다면 new dto 사용
+//            String query = "select m from Member m join fetch m.team"; //기본 패치 조인
+
+            //distinct 사용 시 단순히 sql에서 distinct 역할을 할 뿐만 아니라 식별자가 같은 엔티티를 삭제하는 기능까지 수행한다.
+            //컬렉션 패치 조인(일대다 매핑일 경우 테이블 뻥튀기 현상 발생!)
+            //컬렉션 패이 조인 사용 시 페이징 사용 불가!
+//            String query = "select distinct t from Team t join fetch t.members";
+//            List<Team> result = em.createQuery(query, Team.class)
+//                            .getResultList();
+//
+//            for (Team team : result) { //team은 두갠데 member가 3명이라 3개의 출력문 발생
+//                System.out.println("team.getName() = " + team.getName() + ", count : " + team.getMembers().size());
+//            }
+
+            //엔티티 직접 사용
+//            String query = "select m from Member m where m = :member"; //기본 키 사용
+            String query = "select m from Member m where  m.team= :team"; //외래 키 사용
+            List<Member> result = em.createQuery(query, Member.class)
+                    .setParameter("team", teamA)
+                    .getResultList();
+
+            for (Member member : result) {
+                System.out.println("member.getUsername() = " + member.getUsername());
+            }
+
             tx.commit();
         }catch (Exception e){
             tx.rollback();  //이전 트랜젝션으로 롤백

@@ -16,6 +16,8 @@
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.jdbc.batch_size" value="10"/>
+<!--            컬렉션 조회 시 배치를 사용하여 n+1 문제를 해결 할 수 있다.-->
+            <property name="hibernate.default_batch_fetch_size" value="100"/>
 <!--            운영장비에는 사용 No!-->
             <property name="hibernate.hbm2ddl.auto" value="create" />
         </properties>

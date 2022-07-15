@@ -41,8 +41,9 @@ public class JpaMain {
             member3.setUserType(MemberType.ADMIN);
             em.persist(member3);
 
+            //벌크 연산 수행 시 clear 주의
             em.flush();
-            em.clear();
+//            em.clear();
 
             //파라미터 바인딩, jpql은 엔티티 프로젝션 시 영속성 컨텍스트로 관리한다.
 //            List<Member> result = em.createQuery("select m from Member m where m.username = :username", Member.class)
@@ -146,14 +147,33 @@ public class JpaMain {
 
             //엔티티 직접 사용
 //            String query = "select m from Member m where m = :member"; //기본 키 사용
-            String query = "select m from Member m where  m.team= :team"; //외래 키 사용
-            List<Member> result = em.createQuery(query, Member.class)
-                    .setParameter("team", teamA)
-                    .getResultList();
+//            String query = "select m from Member m where  m.team= :team"; //외래 키 사용
+//            List<Member> result = em.createQuery(query, Member.class)
+//                    .setParameter("team", teamA)
+//                    .getResultList();
+//
+//            for (Member member : result) {
+//                System.out.println("member.getUsername() = " + member.getUsername());
+//            }
 
-            for (Member member : result) {
-                System.out.println("member.getUsername() = " + member.getUsername());
-            }
+            //named query(실무에선 spring data jpa로 사용)
+//            Member result = em.createNamedQuery("Member.findByUsername", Member.class)
+//                    .setParameter("username", "member1")
+//                    .getSingleResult();
+//
+//            System.out.println("result = " + result);
+
+
+            //벌크 연산
+            //벌크연산을 먼저 실행 or 벌크 연산 수행 후 영속성 컨텍스트를 초기화 해야한다(db의 값이랑 영속성 컨텍스트의 값의 불일치 가능성이 있어서)
+            //jpql을 날렸으므로 flush 자동 호출
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+            em.clear(); //벌크 연산 수행 후 clear() 수동 호출 필수!
+
+            Member findMember1 = em.find(Member.class, member1.getId());
+            System.out.println("findMember1.getAge() = " + findMember1.getAge());
+
 
             tx.commit();
         }catch (Exception e){
